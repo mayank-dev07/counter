@@ -1,18 +1,20 @@
-import { IdlAccounts, Program } from "@coral-xyz/anchor";
+import { Program, IdlAccounts } from "@coral-xyz/anchor";
 import { clusterApiUrl, Connection, PublicKey } from "@solana/web3.js";
-import { Counter, IDL } from "./idl";
+import { Counter, IDL } from "./idl_"; // Ensure the IDL is correctly imported
 
-const programId = new PublicKey("5SH9yDLw4o7BfhXHPbnepiuHWf8fvygcrhnPmMByxBm1");
-
+// Initialize the connection to the Solana devnet
 const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
-export const program = new Program<Counter>(IDL, programId, {
+// Initialize the Anchor program
+export const program = new Program<Counter>(IDL, {
   connection,
 });
 
+// Derive the PDA for the counter account
 export const [counterPDA] = PublicKey.findProgramAddressSync(
   [Buffer.from("counter")],
   program.programId
 );
 
+// Define the type for the counter account data
 export type CounterData = IdlAccounts<Counter>["counter"];
