@@ -1,50 +1,62 @@
-# React + TypeScript + Vite
+# React + TypeScript + Vite + Solana Wallet Adapter
+Vite TS template with Solana Wallet Adapter added. 
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Setup and run
+```sh
+yarn
+yarn dev
+```
 
-Currently, two official plugins are available:
+Open [http://localhost:5173/](http://localhost:5173/) to see the app.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+It's configured to use polling for hot reload to make it work with WSL. You can undo this by removing the `server.watch.usePolling` option from `vite.config.ts`:
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
+```diff
+// vite.config.ts
+export default defineConfig({
+  plugins: [react()],
+-  server: {
+-    watch: {
+-     usePolling: true,
+-    },
+-  },
 })
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+This will make hot reloads faster but they won't work on WSL.
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+## Adding a component
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+Create a new file in the `src/components` directory and add the following code:
+
+```tsx
+import { FC, useState } from 'react'
+
+const Counter: FC = () => {
+  const [count, setCount] = useState(0)
+
+  return (
+    <div>
+      <p>You clicked {count} times</p>
+      <button onClick={() => setCount(count + 1)}>Click me</button>
+    </div>
+  )
+}
+
+export default Counter
+```
+
+Now you can use it in the `App.tsx` file:
+
+```tsx
+import Counter from './components/Counter'
+
+function App() {
+  return (
+    <div>
+      <h1>Hello Vite + React!</h1>
+      <Counter />
+    </div>
+  )
+}
 ```
